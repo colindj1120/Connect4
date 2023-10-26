@@ -13,7 +13,8 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
-import static com.colin.game.algorithms.evaluators.EvaluatorConstants.*;
+import static com.colin.game.algorithms.evaluators.EvaluatorConstants.AI_WIN_SCORE;
+import static com.colin.game.algorithms.evaluators.EvaluatorConstants.OPPONENT_WIN_SCORE;
 
 public class Minimax {
     private final Predicate<Integer> isColumnAvailable;

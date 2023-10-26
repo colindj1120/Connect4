@@ -15,4 +15,5 @@ module com.colin.game{
     opens com.colin.game.state to javafx.fxml;
 
     exports com.colin.game.algorithms.enums;
+    exports com.colin.game.enums;
 }

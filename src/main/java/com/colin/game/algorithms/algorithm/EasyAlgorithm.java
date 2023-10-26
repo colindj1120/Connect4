@@ -1,9 +1,7 @@
 package com.colin.game.algorithms.algorithm;
 
 import com.colin.game.algorithms.AlgorithmUtility;
-import com.colin.game.state.GameConfig;
 
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.Random;
 import java.util.function.IntPredicate;

@@ -2,8 +2,6 @@ package com.colin.game.player;
 
 import com.colin.game.state.GameState;
 
-import java.util.concurrent.CompletableFuture;
-
 /**
  * Player interface for the Connect 4 game.
  *
@@ -15,6 +13,6 @@ import java.util.concurrent.CompletableFuture;
  * @author Colin Jokisch
  */
 public interface Player {
-    int makeMove(GameState gameState);
+    void makeMove(GameState gameState);
 }
 

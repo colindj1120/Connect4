@@ -25,47 +25,20 @@ import java.util.stream.IntStream;
  * @version 1.0
  */
 public class GameUI {
-    private final        List<Button>  columnButtons = new ArrayList<>();
     private static final TokenAnimator tokenAnimator = TokenAnimationFactory.createTokenDropAnimator();
     private              GameState     gameState;
     private              GridPane      gameBoard;
 
-    public void initializeUI(GameState gameState, GridPane gameBoard, GridPane buttonGrid) {
+    public void initializeUI(GameState gameState, GridPane gameBoard) {
         this.gameState = gameState;
         this.gameBoard = gameBoard;
         initializeGameBoard();
-        initializeButtonGrid(buttonGrid);
-    }
-
-    public void updateCompletableFutureForButtons(CompletableFuture<Integer> newFuture) {
-        Consumer<Button> updateButtonAction = button -> {
-            int col = GridPane.getColumnIndex(button);
-            button.setOnAction(event -> {
-                CompletableFuture<Void> animationFinished = new CompletableFuture<>();
-                handleTokenDrop(col, animationFinished);
-                animationFinished.thenRun(() -> {
-                    newFuture.complete(col);
-                });
-            });
-        };
-
-        Optional.of(columnButtons)
-                .ifPresent(buttons -> buttons.forEach(updateButtonAction));
     }
 
     private void initializeGameBoard() {
         IntStream.range(0, gameState.getNumRows())
                  .forEach(row -> IntStream.range(0, gameState.getNumCols())
                                           .forEach(col -> gameBoard.add(CellFactory.createCell(col, row), col, row)));
-    }
-
-    private void initializeButtonGrid(GridPane buttonGrid) {
-        IntStream.range(0, gameState.getNumCols())
-                 .forEach(col -> {
-                     Button button = ButtonFactory.createDropButton(col, btn -> {});
-                     columnButtons.add(button);
-                     buttonGrid.add(button, col, 0);
-                 });
     }
 
     public void handleTokenDrop(int column, CompletableFuture<Void> animationFinished) {
@@ -77,8 +50,6 @@ public class GameUI {
             getCircleFromCell(column, row).ifPresent(token -> {
                 // Animate the token dropping
                 tokenAnimator.animate(token, currentPlayer, animationFinished);
-                System.out.println("Switching Player");
-                gameState.switchPlayer();
             });
         }
     }

@@ -3,7 +3,6 @@ package com.colin.game.state;
 import com.colin.game.algorithms.enums.DifficultyLevel;
 import com.colin.game.algorithms.enums.PlayStyle;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;

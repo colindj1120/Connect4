@@ -1,9 +1,5 @@
 package com.colin.game;
 
-import com.colin.game.factories.TokenAnimationFactory;
-import com.colin.game.state.GameUI;
-import com.colin.game.state.GameState;
-import com.colin.game.token.TokenAnimator;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

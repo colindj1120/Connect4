@@ -1,4 +1,4 @@
-package com.colin.game.algorithms.enums;
+package com.colin.game.enums;
 
 /**
  * Enum representing directions for evaluation.

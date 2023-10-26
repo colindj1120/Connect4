@@ -1,18 +1,10 @@
 package com.colin.game.algorithms.algorithm;
 
-import com.colin.game.algorithms.AlgorithmUtility;
-import com.colin.game.algorithms.interfaces.AlphaBetaUpdater;
-import com.colin.game.algorithms.interfaces.BestMoveUpdater;
-import com.colin.game.algorithms.objects.AlphaBeta;
 import com.colin.game.algorithms.objects.Minimax;
 import com.colin.game.algorithms.objects.Move;
 
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.UnaryOperator;
-import java.util.stream.IntStream;
 
 /**
  * HardAlgorithm class for providing a hard level AI for Connect 4.

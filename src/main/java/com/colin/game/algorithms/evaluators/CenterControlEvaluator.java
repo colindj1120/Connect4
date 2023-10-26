@@ -1,6 +1,6 @@
 package com.colin.game.algorithms.evaluators;
 
-import com.colin.game.algorithms.enums.Direction;
+import com.colin.game.enums.Direction;
 import com.colin.game.state.GameConfig;
 
 import java.util.Arrays;

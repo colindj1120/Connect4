@@ -1,6 +1,6 @@
 package com.colin.game.algorithms.algorithm;
 
-import com.colin.game.algorithms.enums.Direction;
+import com.colin.game.enums.Direction;
 
 import java.util.Optional;
 import java.util.function.Predicate;
