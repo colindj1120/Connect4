@@ -4,7 +4,6 @@ import com.colin.game.enums.Direction;
 
 import java.util.Arrays;
 import java.util.OptionalInt;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
 

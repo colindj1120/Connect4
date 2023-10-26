@@ -1,20 +1,15 @@
 package com.colin.game.state;
 
-import com.colin.game.factories.ButtonFactory;
 import com.colin.game.factories.CellFactory;
 import com.colin.game.factories.TokenAnimationFactory;
 import com.colin.game.token.TokenAnimator;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
 /**
