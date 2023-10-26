@@ -13,8 +13,6 @@ import javafx.scene.layout.GridPane;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
-import java.util.function.Supplier;
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
 
@@ -26,8 +24,6 @@ import java.util.stream.IntStream;
  */
 public class Connect4Controller {
     private static final Logger   LOGGER   = Logger.getLogger(Connect4Controller.class.getName());
-    private static final Executor executor = Runnable::run;
-
 
     @FXML
     private GridPane gameBoard;
@@ -37,50 +33,58 @@ public class Connect4Controller {
 
     private final List<Button> columnButtons = new ArrayList<>();
 
-    private GameState gameState;
-    private GameUI    gameUI;
-    private Player    player1;
-    private Player    player2;
-    private CompletableFuture<Integer> currentMoveFuture;
+    private GameState                  gameState;
+    private GameUI                     gameUI;
+    private Player                     player1;
+    private Player                     player2;
+    private CompletableFuture<Integer> moveFuture;
+    private CompletableFuture<Void>    animationFinished;
 
     @FXML
     public void initialize() {
         // Initialization logic remains the same
-        currentMoveFuture = new CompletableFuture<>();
-        initializeButtonGrid(currentMoveFuture);
-        proceedWithGame(currentMoveFuture);
+        gameState         = new GameState();
+        gameUI            = new GameUI();
+        moveFuture        = new CompletableFuture<>();
+        animationFinished = new CompletableFuture<>();
+        initializeButtonGrid();
+        player1 = PlayerFactory.createHumanPlayer();
+        player2 = PlayerFactory.createAIPlayer(gameState.isColumnAvailable, gameState::getBoard, 2, columnButtons);
+        gameUI.initializeUI(gameState, gameBoard);
+        proceedWithGame();
     }
 
-    private void proceedWithGame(CompletableFuture<Integer> moveFuture) {
+    private void proceedWithGame() {
         if (!gameState.isGameOver()) {
-            int currentPlayerId = gameState.getCurrentPlayerId();
-            Player currentPlayer = (currentPlayerId == 1) ? player1 : player2;
+            int    currentPlayerId = gameState.getCurrentPlayerId();
+            Player currentPlayer   = (currentPlayerId == 1) ? player1 : player2;
 
             if (currentPlayer instanceof AIPlayer) {
                 currentPlayer.makeMove(gameState);
             }
 
-            moveFuture.thenRunAsync(() -> {
+            moveFuture.thenRun(() -> {
                 gameState.switchPlayer();
-                this.currentMoveFuture = new CompletableFuture<>();
-                proceedWithGame(this.currentMoveFuture);
-            }, Runnable::run);
+                moveFuture        = new CompletableFuture<>();
+                animationFinished = new CompletableFuture<>();
+                proceedWithGame();
+            });
         } else {
             LOGGER.info("GAME OVER");
         }
     }
 
-    private void initializeButtonGrid(CompletableFuture<Integer> initialMoveFuture) {
+    private void initializeButtonGrid() {
         IntStream.range(0, gameState.getNumCols())
                  .forEach(col -> {
-                     Button button = ButtonFactory.createDropButton(col, initialMoveFuture, gameUI::handleTokenDrop);
+                     Button button = ButtonFactory.createDropButton(col, animationFinished, gameUI::handleTokenDrop);
                      columnButtons.add(button);
                      buttonGrid.add(button, col, 0);
-                     CompletableFutureUtility.futureFromButtonPress(
-                             button,
-                             event -> gameUI.handleTokenDrop(col, this.currentMoveFuture),
-                             Runnable::run
-                     );
+                     button.setOnAction(event -> {
+                         gameUI.handleTokenDrop(col, animationFinished);
+                         animationFinished.thenRun(() -> moveFuture.complete(col));
+                     });
                  });
     }
+}
 
