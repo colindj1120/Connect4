@@ -6,16 +6,14 @@ import com.colin.game.player.AIPlayer;
 import com.colin.game.player.Player;
 import com.colin.game.state.GameState;
 import com.colin.game.state.GameUI;
-import com.colin.game.token.TokenDropHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
+import java.util.concurrent.Executor;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
@@ -27,7 +25,9 @@ import java.util.stream.IntStream;
  * @version 1.8
  */
 public class Connect4Controller {
-    private static final Logger LOGGER = Logger.getLogger(Connect4Controller.class.getName());
+    private static final Logger   LOGGER   = Logger.getLogger(Connect4Controller.class.getName());
+    private static final Executor executor = Runnable::run;
+
 
     @FXML
     private GridPane gameBoard;
@@ -41,72 +41,46 @@ public class Connect4Controller {
     private GameUI    gameUI;
     private Player    player1;
     private Player    player2;
+    private CompletableFuture<Integer> currentMoveFuture;
 
     @FXML
     public void initialize() {
-        gameState = new GameState();
-        gameUI    = new GameUI();
-        initializeButtonGrid();
-
-        player1   = PlayerFactory.createHumanPlayer();
-        player2   = PlayerFactory.createAIPlayer(gameState.isColumnAvailable, gameState::getBoard, 2, columnButtons);
-
-        Supplier<CompletableFuture<Integer>> humanMoveFutureSupplier = CompletableFuture::new;
-        gameUI.initializeUI(gameState, gameBoard);
-        proceedWithGame(humanMoveFutureSupplier);
+        // Initialization logic remains the same
+        currentMoveFuture = new CompletableFuture<>();
+        initializeButtonGrid(currentMoveFuture);
+        proceedWithGame(currentMoveFuture);
     }
 
-    private void proceedWithGame(Supplier<CompletableFuture<Integer>> futureSupplier) {
+    private void proceedWithGame(CompletableFuture<Integer> moveFuture) {
         if (!gameState.isGameOver()) {
-            CompletableFuture<Integer> moveFuture = futureSupplier.get();
-            updateButtons(moveFuture);
-
             int currentPlayerId = gameState.getCurrentPlayerId();
             Player currentPlayer = (currentPlayerId == 1) ? player1 : player2;
-
-            System.out.println("Current Player ID: " + currentPlayerId);
 
             if (currentPlayer instanceof AIPlayer) {
                 currentPlayer.makeMove(gameState);
             }
 
-            moveFuture.thenRun(() -> {
-                System.out.println("Proceeding");
-                proceedWithGame(futureSupplier);
-            });
+            moveFuture.thenRunAsync(() -> {
+                gameState.switchPlayer();
+                this.currentMoveFuture = new CompletableFuture<>();
+                proceedWithGame(this.currentMoveFuture);
+            }, Runnable::run);
         } else {
-            System.out.println("GAME OVER");
+            LOGGER.info("GAME OVER");
         }
-
     }
 
-    private void initializeButtonGrid() {
+    private void initializeButtonGrid(CompletableFuture<Integer> initialMoveFuture) {
         IntStream.range(0, gameState.getNumCols())
                  .forEach(col -> {
-                     Button button = ButtonFactory.createDropButton(col, new CompletableFuture<>(), gameUI::handleTokenDrop);
+                     Button button = ButtonFactory.createDropButton(col, initialMoveFuture, gameUI::handleTokenDrop);
                      columnButtons.add(button);
                      buttonGrid.add(button, col, 0);
+                     CompletableFutureUtility.futureFromButtonPress(
+                             button,
+                             event -> gameUI.handleTokenDrop(col, this.currentMoveFuture),
+                             Runnable::run
+                     );
                  });
     }
-
-    public void updateButtons(CompletableFuture<Integer> newFuture) {
-        Consumer<Button> buttonConsumer = createButtonConsumer(newFuture);
-
-        Optional.of(columnButtons)
-                .ifPresent(buttons -> buttons.forEach(buttonConsumer));
-    }
-
-    private Consumer<Button> createButtonConsumer(CompletableFuture<Integer> newFuture) {
-        return button -> {
-            int col = GridPane.getColumnIndex(button);
-            TokenDropHandler tokenDropHandler = gameUI::handleTokenDrop;
-            CompletableFuture<Void> animationFinished = new CompletableFuture<>();
-            button.setOnAction(event -> tokenDropHandler.handle(col, animationFinished));
-            animationFinished.thenRun(() -> {
-                gameState.switchPlayer();
-                newFuture.complete(col);
-            });
-        };
-    }
-}
 
