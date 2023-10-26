@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.GridPane?>
+<VBox alignment="CENTER" spacing="10" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.colin.game.Connect4Controller">
+    <GridPane fx:id="buttonGrid">
+        <!-- Buttons will be added dynamically -->
+    </GridPane>
+    <GridPane fx:id="gameBoard" styleClass="game-board">
+        <!-- Cells will be added dynamically -->
+    </GridPane>
+</VBox>
+

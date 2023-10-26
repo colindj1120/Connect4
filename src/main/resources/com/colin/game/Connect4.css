@@ -1,0 +1,56 @@
+/* Style for the board's frame */
+.rectangle {
+    -fx-fill: linear-gradient(from 25% 25% to 100% 100%, #1565C0, #0D47A1);
+}
+
+/* Style for the empty slots */
+.circle {
+    -fx-fill: white;
+    -fx-stroke: #BDBDBD;
+    -fx-stroke-width: 2;
+}
+
+/* Style for the drop buttons */
+.button {
+    -fx-background-color: linear-gradient(from 25% 25% to 100% 100%, #1976D2, #1565C0);
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-padding: 10px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+.button:hover {
+    -fx-background-color: #1565C0;
+}
+
+/* Style for the board's slots */
+.slot {
+    -fx-fill: blue;
+    -fx-stroke: black;
+    -fx-stroke-width: 1;
+    -fx-arc-width: 10;
+    -fx-arc-height: 10;
+}
+
+/* Style for the empty tokens */
+.empty-token {
+    -fx-fill: white;
+    -fx-stroke: black;
+    -fx-stroke-width: 1;
+}
+
+/* Style for the game board */
+.game-board {
+    -fx-background-color: black;
+    -fx-padding: 10px;
+    -fx-hgap: 5px;
+    -fx-vgap: 5px;
+}
+
+/* Style for each cell */
+.cell {
+    -fx-background-color: blue;
+    -fx-padding: 5px;
+}
+
