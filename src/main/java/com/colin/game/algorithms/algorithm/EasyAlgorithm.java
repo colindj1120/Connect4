@@ -55,7 +55,7 @@ public class EasyAlgorithm implements Algorithm {
     @Override
     public int makeMove() {
         return findMove(aiToken)
-                .orElseGet(this::randomOrCenterMove);
+                .orElseGet(this::randomMove);
     }
 
     /**
@@ -75,14 +75,11 @@ public class EasyAlgorithm implements Algorithm {
     }
 
     /**
-     * Makes a random move or picks the center column if available.
+     * Makes a random move.
      *
      * @return The index of the column where the move is made.
      */
-    private int randomOrCenterMove() {
-        if (isColumnAvailable.test(numColumns / 2)) {
-            return numColumns / 2;
-        }
+    private int randomMove() {
         int randomMove;
         do {
             randomMove = random.nextInt(numColumns);
