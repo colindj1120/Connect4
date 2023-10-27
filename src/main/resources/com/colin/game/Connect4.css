@@ -14,7 +14,7 @@
 .button {
     -fx-background-color: linear-gradient(from 25% 25% to 100% 100%, #1976D2, #1565C0);
     -fx-text-fill: white;
-    -fx-font-size: 16px;
+    -fx-font-size: 14px;
     -fx-padding: 10px;
     -fx-border-radius: 5px;
     -fx-background-radius: 5px;

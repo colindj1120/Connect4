@@ -9,6 +9,7 @@ import com.colin.game.state.GameUI;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,7 @@ public class Connect4Controller {
     private GridPane gameBoard;
 
     @FXML
-    private GridPane buttonGrid;
+    private HBox buttons;
 
     private final List<Button> columnButtons = new ArrayList<>();
 
@@ -70,7 +71,12 @@ public class Connect4Controller {
                 proceedWithGame();
             });
         } else {
-            LOGGER.info("GAME OVER");
+            if(gameState.isStalemate()) {
+                LOGGER.info("Game ended in stalemate");
+            } else {
+                int currentPlayerId = gameState.getCurrentPlayerId();
+                LOGGER.info("Player " + currentPlayerId + " Won the game. Game is Over");
+            }
         }
     }
 
@@ -79,10 +85,14 @@ public class Connect4Controller {
                  .forEach(col -> {
                      Button button = ButtonFactory.createDropButton(col, animationFinished, gameUI::handleTokenDrop);
                      columnButtons.add(button);
-                     buttonGrid.add(button, col, 0);
+                     buttons.getChildren().add(button);
                      button.setOnAction(event -> {
+                         columnButtons.forEach(btn -> btn.setDisable(true));
                          gameUI.handleTokenDrop(col, animationFinished);
-                         animationFinished.thenRun(() -> moveFuture.complete(col));
+                         animationFinished.thenRun(() -> {
+                             columnButtons.forEach(btn -> btn.setDisable(false));
+                             moveFuture.complete(col);
+                         });
                      });
                  });
     }
