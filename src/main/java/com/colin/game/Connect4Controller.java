@@ -2,14 +2,21 @@ package com.colin.game;
 
 import com.colin.game.factories.ButtonFactory;
 import com.colin.game.factories.PlayerFactory;
+import com.colin.game.gameover.GameOverDialogController;
 import com.colin.game.player.AIPlayer;
 import com.colin.game.player.Player;
 import com.colin.game.state.GameState;
 import com.colin.game.state.GameUI;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,10 +80,33 @@ public class Connect4Controller {
         } else {
             if(gameState.isStalemate()) {
                 LOGGER.info("Game ended in stalemate");
+                showGameOverDialog("Stalemate");
             } else {
                 int currentPlayerId = gameState.getCurrentPlayerId();
                 LOGGER.info("Player " + currentPlayerId + " Won the game. Game is Over");
+                showGameOverDialog("Player " + currentPlayerId + " Won");
             }
+        }
+    }
+
+    public void showGameOverDialog(String outcome) {
+        try {
+            FXMLLoader loader     = new FXMLLoader(getClass().getResource("GameOverDialog.fxml"));
+            StackPane  dialogPane = loader.load();
+
+            Stage dialogStage = new Stage();
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+
+            Scene scene = new Scene(dialogPane);
+            dialogStage.setScene(scene);
+
+            GameOverDialogController controller = loader.getController();
+            controller.setOutcome(outcome);
+            dialogStage.setOnShown((WindowEvent event) -> controller.startFireworks());
+
+            dialogStage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

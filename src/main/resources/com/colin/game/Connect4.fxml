@@ -3,7 +3,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<VBox alignment="CENTER" spacing="2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.colin.game.Connect4Controller">
+<VBox alignment="CENTER" spacing="2" xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx" fx:controller="com.colin.game.Connect4Controller">
     <HBox fx:id="buttons" alignment="CENTER" spacing="5">
         <!-- Buttons will be added dynamically -->
     </HBox>

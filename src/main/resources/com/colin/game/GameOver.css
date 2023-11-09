@@ -1,0 +1,9 @@
+.stylish-label {
+    -fx-font-size: 24px;
+    -fx-text-fill: Black;
+    -fx-font-weight: bold;
+}
+
+#fireworksPane {
+    -fx-background-color: #9791a1;  /* Choose a color that contrasts well with your fireworks */
+}

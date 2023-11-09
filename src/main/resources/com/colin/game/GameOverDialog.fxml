@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane id="StackPane" prefHeight="200.0" prefWidth="300.0"
+           stylesheets="/com/colin/game/GameOver.css"
+           xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx"
+           fx:controller="com.colin.game.gameover.GameOverDialogController">
+
+    <Pane fx:id="fireworksPane" prefWidth="300.0" prefHeight="200.0" />
+    <Label fx:id="outcomeLabel" text="Stalemate!" styleClass="stylish-label" />
+
+</StackPane>
